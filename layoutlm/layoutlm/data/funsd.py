@@ -45,7 +45,7 @@ class FunsdDataset(Dataset):
                 pad_token_segment_id=4 if args.model_type in ["xlnet"] else 0,
                 pad_token_label_id=pad_token_label_id,
             )
-            if args.local_rank in [-1, 0]:
+            #if args.local_rank in [-1, 0]:
                 #logger.info("Saving features into cached file %s", cached_features_file)
                 #torch.save(features, cached_features_file)
 
