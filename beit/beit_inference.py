@@ -22,6 +22,8 @@ import requests
 from torchvision import transforms
 
 from timm.models import create_model
+from timm.data.constants import \
+    IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
 import modeling_finetune
 
 
@@ -62,8 +64,12 @@ def get_args():
     # Dataset params
     parser.add_argument('--nb_classes', default=21841, type=int,
                         help='number of the classification types')
+    parser.add_argument('--imagenet_default_mean_and_std', default=False, action='store_true')
     parser.add_argument('--output_dir', default='',
                         help='path where to save, empty for no saving')
+    
+    # Evaluation parameters
+    parser.add_argument('--crop_pct', type=float, default=None)
     
     # * Finetuning params
     parser.add_argument('--finetune', default='',
@@ -230,13 +236,28 @@ def main(args):
 
     url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
     image = Image.open(requests.get(url, stream=True).raw)
-    transform_test = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
-        ]
-    )
+ 
+    resize_im = args.input_size > 32
+    imagenet_default_mean_and_std = args.imagenet_default_mean_and_std
+    mean = IMAGENET_INCEPTION_MEAN if not imagenet_default_mean_and_std else IMAGENET_DEFAULT_MEAN
+    std = IMAGENET_INCEPTION_STD if not imagenet_default_mean_and_std else IMAGENET_DEFAULT_STD
+    t = []
+    if resize_im:
+        if args.crop_pct is None:
+            if args.input_size < 384:
+                args.crop_pct = 224 / 256
+            else:
+                args.crop_pct = 1.0
+        size = int(args.input_size / args.crop_pct)
+        t.append(
+            transforms.Resize(size, interpolation=3),  # to maintain same ratio w.r.t. 224 images
+        )
+        t.append(transforms.CenterCrop(args.input_size))
+
+    t.append(transforms.ToTensor())
+    t.append(transforms.Normalize(mean, std))
+
+    transform_test = transforms.Compose(t)
 
     pixel_values = transform_test(image).unsqueeze(0)
     print("Shape of pixel values:", pixel_values.shape)
