@@ -141,6 +141,8 @@ def main(args):
 
             checkpoint_model.pop("rel_pos_bias.relative_position_bias_table")
 
+        model.load_state_dict(checkpoint_model)
+        
         # all_keys = list(checkpoint_model.keys())
         # for key in all_keys:
         #     if "relative_position_index" in key:
