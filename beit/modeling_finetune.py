@@ -130,16 +130,27 @@ class Attention(nn.Module):
         q = q * self.scale
         attn = (q @ k.transpose(-2, -1))
 
+        print("Shape of attention scores:", attn.shape)
+        
+        print("Attention scores before relative position bias:")
+        print(attn[0,0,:3,:3])
+        
         if self.relative_position_bias_table is not None:
             relative_position_bias = \
                 self.relative_position_bias_table[self.relative_position_index.view(-1)].view(
                     self.window_size[0] * self.window_size[1] + 1,
                     self.window_size[0] * self.window_size[1] + 1, -1)  # Wh*Ww,Wh*Ww,nH
+            #print("Relative position bias:", relative_position_bias[:3,:3,:3])
+            #print("Relative position bias first elements:", relative_position_bias[:3,:3,:3])
+            #print("Relative position bias last elements:", relative_position_bias[-3:,-3:,-3:])
             relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()  # nH, Wh*Ww, Wh*Ww
             attn = attn + relative_position_bias.unsqueeze(0)
-
+        
         if rel_pos_bias is not None:
             attn = attn + rel_pos_bias
+
+        print("Attention scores after relative position bias:")
+        print(attn[0,0,:3,:3])
         
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
@@ -173,12 +184,42 @@ class Block(nn.Module):
             self.gamma_1, self.gamma_2 = None, None
 
     def forward(self, x, rel_pos_bias=None):
+        
+        z = self.attn(self.norm1(x), rel_pos_bias=rel_pos_bias)
+
+        #print("Sum of hidden states after self-attention:", z.sum().item())
+        print("Hidden states after self-attention:", z[0, :3,: 3])
+        #print("First elements of gamma_1 weights:", self.gamma_1[:3])
+        #print("Sum of gamma_1 weights:", self.gamma_1.sum().item())
+        
+        y = self.gamma_1 * z
+        
+        #print("Sum of hidden states after gamma 1: ", y.sum().item())
+
         if self.gamma_1 is None:
             x = x + self.drop_path(self.attn(self.norm1(x), rel_pos_bias=rel_pos_bias))
             x = x + self.drop_path(self.mlp(self.norm2(x)))
         else:
             x = x + self.drop_path(self.gamma_1 * self.attn(self.norm1(x), rel_pos_bias=rel_pos_bias))
+            #print("Sum of hidden states after first residual connection:", x.sum().item())
+
+            y = self.norm2(x)
+            #print("Sum of hidden states after layer norm:", y.sum().item())
+            
+            w = self.mlp(y)
+
+            #print("Sum of hidden states after intermediate:", w.sum().item())
+
+            a = self.gamma_2 * w 
+
+            #print("Sum of hidden states after gamma 2:", a.sum().item())
+
+            #print("Sum of hidden states which are added:", x.sum().item())
+            
             x = x + self.drop_path(self.gamma_2 * self.mlp(self.norm2(x)))
+        
+            #print("Sum of hidden states after second residual connection:", x.sum().item())
+        
         return x
 
 
@@ -329,7 +370,9 @@ class VisionTransformer(nn.Module):
         self.head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
 
     def forward_features(self, x):
+        
         x = self.patch_embed(x)
+
         batch_size, seq_len, _ = x.size()
 
         cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
@@ -337,10 +380,14 @@ class VisionTransformer(nn.Module):
         if self.pos_embed is not None:
             x = x + self.pos_embed
         x = self.pos_drop(x)
-
+        
         rel_pos_bias = self.rel_pos_bias() if self.rel_pos_bias is not None else None
-        for blk in self.blocks:
+        for i, blk in enumerate(self.blocks):
+            # hidden_states are of shape (batch_size, seq_len, hidden_size)
+            print("----------------------------------")
+            print(f"Hidden states before block {i}", x[0, :3, :3])
             x = blk(x, rel_pos_bias=rel_pos_bias)
+            print(f"Hidden states after block {i}", x[0, :3, :3])
 
         x = self.norm(x)
         if self.fc_norm is not None:

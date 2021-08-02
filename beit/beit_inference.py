@@ -62,7 +62,7 @@ def get_args():
     parser.add_argument('--model_ema_force_cpu', action='store_true', default=False, help='')
 
     # Dataset params
-    parser.add_argument('--nb_classes', default=21841, type=int,
+    parser.add_argument('--nb_classes', default=1000, type=int,
                         help='number of the classification types')
     parser.add_argument('--imagenet_default_mean_and_std', default=False, action='store_true')
     parser.add_argument('--output_dir', default='',
@@ -235,10 +235,11 @@ def main(args):
 
         # utils.load_state_dict(model, checkpoint_model, prefix=args.model_prefix)
         # # model.load_state_dict(checkpoint_model, strict=False)
-
+    
     url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
     image = Image.open(requests.get(url, stream=True).raw)
  
+    # define image transforms
     resize_im = args.input_size > 32
     imagenet_default_mean_and_std = args.imagenet_default_mean_and_std
     mean = IMAGENET_INCEPTION_MEAN if not imagenet_default_mean_and_std else IMAGENET_DEFAULT_MEAN
@@ -262,8 +263,14 @@ def main(args):
     transform_test = transforms.Compose(t)
 
     pixel_values = transform_test(image).unsqueeze(0)
-    print("Shape of pixel values:", pixel_values.shape)
+
+    # test
+    transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize(mean, std)])
+    pixel_values = transform(image).unsqueeze(0)
+
+    print("Sum of pixel values:", pixel_values.sum())
     logits = model(pixel_values)
+    print("Sum of logits:", logits.sum())
     print("Shape of logits:", logits.shape)
     print("Predicted class index:", logits.argmax(-1).item())
 
