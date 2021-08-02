@@ -130,10 +130,10 @@ class Attention(nn.Module):
         q = q * self.scale
         attn = (q @ k.transpose(-2, -1))
 
-        print("Shape of attention scores:", attn.shape)
+        #print("Shape of attention scores:", attn.shape)
         
-        print("Attention scores before relative position bias:")
-        print(attn[0,0,:3,:3])
+        #print("Attention scores before relative position bias:")
+        #print(attn[0,0,:3,:3])
         
         if self.relative_position_bias_table is not None:
             relative_position_bias = \
@@ -149,8 +149,8 @@ class Attention(nn.Module):
         if rel_pos_bias is not None:
             attn = attn + rel_pos_bias
 
-        print("Attention scores after relative position bias:")
-        print(attn[0,0,:3,:3])
+        #print("Attention scores after relative position bias:")
+        #print(attn[0,0,:3,:3])
         
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
