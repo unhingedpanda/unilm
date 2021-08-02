@@ -264,8 +264,10 @@ def main(args):
 
     pixel_values = transform_test(image).unsqueeze(0)
 
-    # test
-    transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize(mean, std)])
+    # TEST: instead of using the transforms defined above, simply resize + normalize
+    transform = transforms.Compose([transforms.Resize((args.input_size, args.input_size)), 
+                                    transforms.ToTensor(), 
+                                    transforms.Normalize(mean, std)])
     pixel_values = transform(image).unsqueeze(0)
 
     print("Sum of pixel values:", pixel_values.sum())
@@ -273,6 +275,8 @@ def main(args):
     print("Sum of logits:", logits.sum())
     print("Shape of logits:", logits.shape)
     print("Predicted class index:", logits.argmax(-1).item())
+
+    print(logits[0,:3])
 
 if __name__ == '__main__':
     opts = get_args()
