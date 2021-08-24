@@ -107,6 +107,9 @@ class VisionTransformerForMaskedImageModeling(nn.Module):
         x = self.patch_embed(x, bool_masked_pos=bool_masked_pos)
         batch_size, seq_len, _ = x.size()
 
+        print("Patch embedding layer:", self.patch_embed.proj.weight.sum())
+        print("Patch embeddings:", x[0,:3,:3])
+
         cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
         mask_token = self.mask_token.expand(batch_size, seq_len, -1)
 
@@ -118,7 +121,7 @@ class VisionTransformerForMaskedImageModeling(nn.Module):
         if self.pos_embed is not None:
             x = x + self.pos_embed
         x = self.pos_drop(x)
-
+        
         rel_pos_bias = self.rel_pos_bias() if self.rel_pos_bias is not None else None
         for blk in self.blocks:
             x = blk(x, rel_pos_bias=rel_pos_bias)
@@ -128,6 +131,11 @@ class VisionTransformerForMaskedImageModeling(nn.Module):
     def forward(self, x, bool_masked_pos, return_all_tokens=False):
         x = self.forward_features(x, bool_masked_pos=bool_masked_pos)
         x = x[:, 1:]
+        
+        print("Shape of x:", x.shape)
+
+        print(x[bool_masked_pos])
+        
         if return_all_tokens:
             return self.lm_head(x)
         else:

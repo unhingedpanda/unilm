@@ -9,6 +9,12 @@
 # https://github.com/facebookresearch/deit
 # https://github.com/facebookresearch/dino
 # --------------------------------------------------------'
+
+"""
+BEiT inference script (for the fine-tuned checkpoints).
+Based on run_class_finetuning.py.
+"""
+
 import argparse
 import numpy as np
 import torch

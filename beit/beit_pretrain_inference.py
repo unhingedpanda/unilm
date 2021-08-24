@@ -10,16 +10,25 @@
 # https://github.com/facebookresearch/dino
 # --------------------------------------------------------'
 
+"""
+BEiT inference script (for the pre-trained only checkpoints).
+Based on run_beit_pretraining.py.
+"""
+
 import torch
 import json
 import os
 import argparse
 
+from PIL import Image
+import requests
+from torchvision import transforms
+
 from timm.models import create_model
 from timm.data.constants import \
     IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
+import modeling_pretrain
 
-from torchvision import transforms
 
 def get_args():
     parser = argparse.ArgumentParser('BEiT pre-training script', add_help=False)
@@ -103,10 +112,19 @@ def main(args):
                                     transforms.Normalize(mean, std)])
     pixel_values = transform(image).unsqueeze(0)
 
+    print("Pixel values:", pixel_values[0,:3,:3,:3])
+    
+    # prepare bool_masked_pos
+    bool_masked_pos = torch.ones((1, 196), dtype=torch.bool)
+    bool_masked_pos[0,2] = 0
+    bool_masked_pos[0,44] = 0
+    
     # forward pass
-    logits = model(pixel_values)
+    logits = model(pixel_values, bool_masked_pos)
 
     print("Shape of logits:", logits.shape)
+    print("First few elements:", logits[:3, :3])
+    print("Sum of logits:", logits.sum())
 
 
 if __name__ == '__main__':
