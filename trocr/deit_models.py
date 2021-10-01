@@ -418,13 +418,13 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
             if specified:
                 pretrained_model = pretrained_model.replace('-', '.')
                 logger.info('Load pre-trained decoder parameters from {}'.format(pretrained_model))
-                roberta = torch.hub.load('pytorch/fairseq', pretrained_model)
+                roberta = torch.hub.load('pytorch/fairseq:main', pretrained_model)
             elif args.decoder_layers == 6:
                 logger.info('Load pre-trained decoder parameters from roberta.base')
-                roberta = torch.hub.load('pytorch/fairseq', 'roberta.base')
+                roberta = torch.hub.load('pytorch/fairseq:main', 'roberta.base')
             elif args.decoder_layers == 12:
                 logger.info('Load pre-trained decoder parameters from roberta.large')
-                roberta = torch.hub.load('pytorch/fairseq', 'roberta.large')
+                roberta = torch.hub.load('pytorch/fairseq:main', 'roberta.large')
             else:
                 raise AttributeError('Cannot determind the pre-trained model')
 
@@ -502,13 +502,13 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
             if specified:
                 pretrained_model = pretrained_model.replace('-', '.')
                 logger.info('Load pre-trained decoder parameters from {}'.format(pretrained_model))
-                roberta = torch.hub.load('pytorch/fairseq', pretrained_model)
+                roberta = torch.hub.load('pytorch/fairseq:main', pretrained_model)
             elif args.decoder_layers == 6:
                 logger.info('Load pre-trained decoder parameters from roberta.base')
-                roberta = torch.hub.load('pytorch/fairseq', 'roberta.base')
+                roberta = torch.hub.load('pytorch/fairseq:main', 'roberta.base')
             elif args.decoder_layers == 12:
                 logger.info('Load pre-trained decoder parameters from roberta.large')
-                roberta = torch.hub.load('pytorch/fairseq', 'roberta.large')
+                roberta = torch.hub.load('pytorch/fairseq:main', 'roberta.large')
             else:
                 raise AttributeError('Cannot determind the pre-trained model')
 
@@ -540,9 +540,15 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
 
     def forward(self, imgs, prev_output_tokens, **kwargs):
         encoder_out = self.encoder(imgs, **kwargs)
+
+        print("Shape of encoder output:", encoder_out.shape)
+
         decoder_out = self.decoder(
             prev_output_tokens, encoder_out=encoder_out, **kwargs
         )
+
+        print("Shape of encoder output:", decoder_out.shape)
+
         return decoder_out
 
 
