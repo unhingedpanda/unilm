@@ -6,8 +6,8 @@ from fairseq.data import Dictionary
 from fairseq.tasks import LegacyFairseqTask, register_task
 from torchvision.transforms.transforms import ToTensor
 
-from .data import SROIETextRecognitionDataset, SyntheticTextRecognitionDataset
-from .data_aug import build_data_aug
+from data import SROIETextRecognitionDataset, SyntheticTextRecognitionDataset
+from data_aug import build_data_aug
 import logging
 
 logger = logging.getLogger(__name__)
