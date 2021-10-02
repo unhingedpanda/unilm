@@ -541,13 +541,9 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
     def forward(self, imgs, prev_output_tokens, **kwargs):
         encoder_out = self.encoder(imgs, **kwargs)
 
-        print("Shape of encoder output:", encoder_out.shape)
-
         decoder_out = self.decoder(
             prev_output_tokens, encoder_out=encoder_out, **kwargs
         )
-
-        print("Shape of encoder output:", decoder_out.shape)
 
         return decoder_out
 
