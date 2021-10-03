@@ -542,10 +542,7 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
         encoder_out = self.encoder(imgs, **kwargs)
 
         for k,v in encoder_out.items():
-            if isinstance(v, list):
-                print(k, v[0].shape)
-            else:
-                print(k, v.shape)
+            print(k,v)
         
         decoder_out = self.decoder(
             prev_output_tokens, encoder_out=encoder_out, **kwargs
