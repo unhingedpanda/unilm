@@ -542,8 +542,9 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
         encoder_out = self.encoder(imgs, **kwargs)
 
         for k,v in encoder_out.items():
-            if len(v) > 0:
-                print(k,v[0].shape)
+            if k == "encoder_out":
+                print(f"Shape of {k}:",v[0].shape)
+                print(f"First elements of {k}:",v[:3,0,:3])
         
         decoder_out = self.decoder(
             prev_output_tokens, encoder_out=encoder_out, **kwargs
