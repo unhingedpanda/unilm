@@ -81,8 +81,6 @@ class DistilledVisionTransformer(VisionTransformer):
         # with slight modifications to add the dist_token
         B = x.shape[0]
         x = self.patch_embed(x)  # B C Wh Ww
-
-        print("Shape of patch embeddings:", x.shape)
         
         if self.ape:
             Wh, Ww = x.size(2), x.size(3)

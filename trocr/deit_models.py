@@ -550,6 +550,8 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
             prev_output_tokens, encoder_out=encoder_out, **kwargs
         )
 
+        print("Decoder out:", decoder_out)
+
         return decoder_out
 
 
@@ -631,6 +633,8 @@ class DeiTTREncoder(FairseqEncoder):
     def __init__(self, args, dictionary):
         super().__init__(dictionary)
         
+        print("Deit architecture:", args.deit_arch)
+        
         if 'custom_size' in args.deit_arch:
             self.deit = create_model(args.deit_arch, pretrained=True, img_size=args.input_size, ape=args.ape, mask_ratio=args.mask_ratio)
         else:
@@ -643,9 +647,6 @@ class DeiTTREncoder(FairseqEncoder):
             imgs = imgs.half()
 
         x, encoder_embedding = self.deit.forward_features(imgs)  # bs, n + 2, dim
-        
-        print("Shape of x:", x.shape)
-        print("First elements of x:", x[0,:3,:3])
         
         x = x.transpose(0, 1) # n + 2, bs, dim
 
