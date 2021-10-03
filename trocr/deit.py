@@ -82,6 +82,8 @@ class DistilledVisionTransformer(VisionTransformer):
         B = x.shape[0]
         x = self.patch_embed(x)  # B C Wh Ww
 
+        print("Shape of patch embeddings:", x.shape)
+        
         if self.ape:
             Wh, Ww = x.size(2), x.size(3)
             adapt_pos_embed = self.pos_embed[:, 2:, :].view(self.pos_embed.shape[0], 24, 24, self.pos_embed.shape[-1])  # B 24 24 768
