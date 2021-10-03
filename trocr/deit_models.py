@@ -643,6 +643,10 @@ class DeiTTREncoder(FairseqEncoder):
             imgs = imgs.half()
 
         x, encoder_embedding = self.deit.forward_features(imgs)  # bs, n + 2, dim
+        
+        print("Shape of x:", x.shape)
+        print("First elements of x:", x[0,:3,:3])
+        
         x = x.transpose(0, 1) # n + 2, bs, dim
 
         encoder_padding_mask = torch.zeros(*x.shape[:2]).transpose(0, 1).to(imgs.device)
