@@ -550,8 +550,6 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
             prev_output_tokens, encoder_out=encoder_out, **kwargs
         )
 
-        print("Decoder out:", decoder_out)
-
         return decoder_out
 
 
