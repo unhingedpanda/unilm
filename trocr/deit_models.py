@@ -407,6 +407,8 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
             args, task.target_dictionary, args.decoder_embed_dim, args.decoder_embed_path
         )
 
+        print("First elements of decoder embed tokens:", decoder_embed_tokens.weight[:3,:3])
+
         if getattr(args, "decoder_pretrained", None) == 'unilm':
             args.decoder_attention_heads = 12
 
@@ -534,6 +536,7 @@ class DeiTTRModel(FairseqEncoderDecoderModel):
         emb = Embedding(num_embeddings, embed_dim, padding_idx)
         # if provided, load from preloaded dictionaries
         if path:
+            print("!! A path was provided to parse the embeddings")
             embed_dict = utils.parse_embedding(path)
             utils.load_embedding(embed_dict, dictionary, emb)
         return emb
