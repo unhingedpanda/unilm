@@ -73,6 +73,9 @@ def train(args, train_dataset, model, tokenizer):
             }
     for k,v in inputs.items():
         print(k, v.shape)
+    print(inputs["input_ids"])
+    print(inputs["xpath_tags_seq"])
+    print(inputs["xpath_subs_seq"])
     # END ADDED
 
     if args.max_steps > 0:
