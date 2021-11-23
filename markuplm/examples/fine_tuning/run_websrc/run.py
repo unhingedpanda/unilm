@@ -57,7 +57,15 @@ def train(args, train_dataset, model, tokenizer):
 
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, args.n_gpu)
     train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
-    train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
+    #train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
+    
+    # ADDED
+    train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=1)
+
+    batch = next(iter(train_dataloader))
+    for k, v in batch.items():
+        print(k, v.shape)
+    # END ADDED
 
     if args.max_steps > 0:
         t_total = args.max_steps
