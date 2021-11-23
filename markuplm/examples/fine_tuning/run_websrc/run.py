@@ -62,8 +62,16 @@ def train(args, train_dataset, model, tokenizer):
     # ADDED
     train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=1)
 
-    batch = next(iter(train_dataloader))
-    for k, v in batch.items():
+    batch = tuple(next(iter(train_dataloader)))
+    inputs = {'input_ids': batch[0],
+              'attention_mask': batch[1],
+              'token_type_ids': batch[2],
+              'xpath_tags_seq': batch[3],
+              'xpath_subs_seq': batch[4],
+              'start_positions': batch[5],
+              'end_positions': batch[6],
+            }
+    for k,v in inputs.items():
         print(k, v.shape)
     # END ADDED
 
