@@ -131,6 +131,8 @@ class SROIETextRecognitionTask(LegacyFairseqTask):
         if getattr(args, "score_reference", False):
             from fairseq.sequence_scorer import SequenceScorer
 
+            print("We are using the SequenceScorer")
+            
             return SequenceScorer(
                 self.target_dictionary,
                 compute_alignment=getattr(args, "print_alignment", False),

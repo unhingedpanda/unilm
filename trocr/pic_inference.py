@@ -23,7 +23,7 @@ def init(model_path, beam=5):
         transforms.Normalize(0.5, 0.5)
     ])
 
-    print("Task:", task)
+    print("Task args:", task.args)
     
     print("Configuration:", cfg)
 
