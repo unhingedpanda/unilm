@@ -23,6 +23,12 @@ def init(model_path, beam=5):
         transforms.Normalize(0.5, 0.5)
     ])
 
+    print("Task:", task)
+    
+    print("Configuration:", cfg)
+
+    print("Generation parameters:", cfg.generation)
+    
     generator = task.build_generator(
         model, cfg.generation, extra_gen_cls_kwargs={'lm_model': None, 'lm_weight': None}
     )
@@ -62,9 +68,9 @@ def get_text(cfg, generator, model, sample, bpe):
     return detok_hypo_str
 
 
-if __name__ == '__main__':
-    model_path = 'path/to/model'
-    jpg_path = "path/to/pic"
+if __name__ == '__main__':    
+    model_path = '/content/drive/MyDrive/TrOCR/Checkpoints/trocr-base-printed.pt'
+    jpg_path = "/content/drive/MyDrive/TrOCR/Fix TrOCR generate issue/Interactive demo TrOCR.jpg"
     beam = 5
 
     model, cfg, task, generator, bpe, img_transform, device = init(model_path, beam)
