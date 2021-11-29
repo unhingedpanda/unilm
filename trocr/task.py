@@ -138,6 +138,8 @@ class SROIETextRecognitionTask(LegacyFairseqTask):
                 compute_alignment=getattr(args, "print_alignment", False),
             )
 
+        print("hello world we are not using SequenceScorer")
+        
         from fairseq.sequence_generator import (
             SequenceGenerator,
             SequenceGeneratorWithAlignment,
