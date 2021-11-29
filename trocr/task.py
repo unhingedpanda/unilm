@@ -223,6 +223,9 @@ class SROIETextRecognitionTask(LegacyFairseqTask):
             else:
                 seq_gen_cls = TextRecognitionGenerator
 
+        print("Seq_gen_cls:", seq_gen_cls)
+        print("Arguments:", args)
+        
         return seq_gen_cls(
             models,
             self.target_dictionary,
