@@ -93,7 +93,7 @@ class XfunReTrainer(FunsdTrainer):
         entities = None
         for step, inputs in enumerate(dataloader):
             outputs, labels = self.prediction_step(model, inputs, prediction_loss_only, ignore_keys=ignore_keys)
-            re_labels = labels[1] if re_labels is None else re_labels + labels[1]
+            re_labels = labels[0] if re_labels is None else re_labels + labels[0]
             pred_relations = (
                 outputs.pred_relations if pred_relations is None else pred_relations + outputs.pred_relations
             )
