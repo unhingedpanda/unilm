@@ -279,8 +279,8 @@ def main():
 
                     print("Shape of input_ids:", input_ids.shape)
                     print("Decode input_ids:", tokenizer.decode(input_ids[0, :, 0]))
-                    print("Token type ids:", token_type_ids)
-                    print("Input mask:", input_mask)
+                    print("Token type ids:", token_type_ids[0])
+                    print("Input mask:", input_mask[0])
                     print("Mask qkv:", mask_qkv)
                     print("Task idx:", task_idx)
 
