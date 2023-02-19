@@ -260,6 +260,7 @@ def main():
             while first_batch or (next_i + args.batch_size <= len(input_lines)):
             # while next_i < len(input_lines):
                 _chunk = input_lines[next_i:next_i + args.batch_size]
+                print("Chunk:", _chunk)
                 buf_id = [x[0] for x in _chunk]
                 buf = [x[1] for x in _chunk]
                 next_i += args.batch_size
@@ -275,6 +276,9 @@ def main():
                     batch = [
                         t.to(device) if t is not None else None for t in batch]
                     input_ids, token_type_ids, position_ids, input_mask, mask_qkv, task_idx = batch
+
+                    print("Shape of input_ids:", input_ids.shape)
+
                     traces = model(input_ids, token_type_ids,
                                    position_ids, input_mask, task_idx=task_idx, mask_qkv=mask_qkv)
                     if args.beam_size > 1:
