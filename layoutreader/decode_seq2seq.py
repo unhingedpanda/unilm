@@ -301,6 +301,8 @@ def main():
                         target = target_lines[buf_id[i]]
                         target = detokenize(target)
                         result = output_sequence.split()
+                        print("Target:", target)
+                        print("Result:", result)
                         score = sentence_bleu([target], result)
 
                         geo_score = target_geo_scores[buf_id[i]]
