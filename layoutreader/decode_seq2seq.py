@@ -279,6 +279,10 @@ def main():
 
                     print("Shape of input_ids:", input_ids.shape)
                     print("Decode input_ids:", tokenizer.decode(input_ids[0, :, 0]))
+                    print("Token type ids:", token_type_ids)
+                    print("Input mask:", input_mask)
+                    print("Mask qkv:", mask_qkv)
+                    print("Task idx:", task_idx)
 
                     traces = model(input_ids, token_type_ids,
                                    position_ids, input_mask, task_idx=task_idx, mask_qkv=mask_qkv)
