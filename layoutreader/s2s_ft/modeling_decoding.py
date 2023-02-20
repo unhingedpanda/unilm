@@ -331,14 +331,10 @@ class LayoutlmEmbeddings(nn.Module):
         else:
             self.fp32_embedding = False
 
-        print("Fp32 embedding:", self.fp32_embedding)
-
         if hasattr(config, 'new_pos_ids') and config.new_pos_ids:
             self.num_pos_emb = 4
         else:
             self.num_pos_emb = 1
-
-        print("Number of position embeddings:", self.num_pos_emb)
 
         self.position_embeddings = nn.Embedding(
             config.max_position_embeddings, config.hidden_size * self.num_pos_emb)
@@ -1240,12 +1236,11 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
 
             last_hidden = new_encoded_layers[-1][:, -1:, :]
             prediction_scores, _ = self.cls(last_hidden, None, src_embedding, task_idx=task_idx)
-            if print_flag:
-                print("Shape of prediction_scores: ", prediction_scores.shape)
-                print("First values of prediction_scores:", prediction_scores[0, :3, :3])
-                i += 1
-            if i > 10:
-                print_flag = False
+            
+            print("--------------------")
+            print("Time step:", next_pos)
+            print("First values of prediction_scores:", prediction_scores[0,:3,:3])
+            
             _, max_ids = torch.max(prediction_scores, dim=-1)
             output_ids.append(max_ids)
 

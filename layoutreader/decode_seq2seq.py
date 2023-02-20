@@ -304,12 +304,15 @@ def main():
 
                     traces = model(input_ids, token_type_ids,
                                    position_ids, input_mask, task_idx=task_idx, mask_qkv=mask_qkv)
+                    
+                    print("Output ids:", traces)
+
                     if args.beam_size > 1:
                         traces = {k: v.tolist() for k, v in traces.items()}
                         output_ids = traces['pred_seq']
                     else:
                         output_ids = traces.tolist()
-                    print("Output ids:", output_ids)
+                    
                     for i in range(len(buf)):
                         w_ids = output_ids[i]
                         output_buf = get_tokens_from_src_and_index(src=buf[i], index=w_ids, modifier=lambda x: x-1)
