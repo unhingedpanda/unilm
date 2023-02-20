@@ -398,6 +398,10 @@ class LayoutlmEmbeddings(nn.Module):
             embeddings = embeddings.half()
         embeddings = self.LayerNorm(embeddings)
         embeddings = self.dropout(embeddings)
+
+        print("Shape of embeddings:", embeddings.shape)
+        print("First values of embeddings:", embeddings[0, :3, :3])
+
         return embeddings
 
 
@@ -1235,6 +1239,7 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
                 print("Shape of prediction_scores: ", prediction_scores.shape)
                 print("First values of prediction_scores:", prediction_scores[0, :3, :3])
                 print_flag = False
+                break
             _, max_ids = torch.max(prediction_scores, dim=-1)
             output_ids.append(max_ids)
 
