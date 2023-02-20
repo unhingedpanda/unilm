@@ -248,6 +248,8 @@ class BertEmbeddings(nn.Module):
         else:
             self.fp32_embedding = False
 
+        print("Fp32 embedding:", self.fp32_embedding)
+
         if hasattr(config, 'new_pos_ids') and config.new_pos_ids:
             self.num_pos_emb = 4
         else:
