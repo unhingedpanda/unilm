@@ -309,6 +309,7 @@ def main():
                         output_ids = traces['pred_seq']
                     else:
                         output_ids = traces.tolist()
+                    print("Output ids:", output_ids)
                     for i in range(len(buf)):
                         w_ids = output_ids[i]
                         output_buf = get_tokens_from_src_and_index(src=buf[i], index=w_ids, modifier=lambda x: x-1)

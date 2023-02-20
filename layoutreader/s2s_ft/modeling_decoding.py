@@ -1197,6 +1197,7 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
 
         src_embedding = None
 
+        print_flag = True
         while next_pos < output_length:
             curr_length = list(curr_ids.size())[1]
 
@@ -1230,7 +1231,10 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
 
             last_hidden = new_encoded_layers[-1][:, -1:, :]
             prediction_scores, _ = self.cls(last_hidden, None, src_embedding, task_idx=task_idx)
-            print("Shape of prediction_scores: ", prediction_scores.shape)
+            if print_flag:
+                print("Shape of prediction_scores: ", prediction_scores.shape)
+                print("First values of prediction_scores:", prediction_scores[0, :3, :3])
+                print_flag = False
             _, max_ids = torch.max(prediction_scores, dim=-1)
             output_ids.append(max_ids)
 
