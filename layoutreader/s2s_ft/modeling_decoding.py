@@ -1230,6 +1230,7 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
 
             last_hidden = new_encoded_layers[-1][:, -1:, :]
             prediction_scores, _ = self.cls(last_hidden, None, src_embedding, task_idx=task_idx)
+            print("Shape of prediction_scores: ", prediction_scores.shape)
             _, max_ids = torch.max(prediction_scores, dim=-1)
             output_ids.append(max_ids)
 

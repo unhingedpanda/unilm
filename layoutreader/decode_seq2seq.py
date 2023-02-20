@@ -277,6 +277,18 @@ def main():
                         t.to(device) if t is not None else None for t in batch]
                     input_ids, token_type_ids, position_ids, input_mask, mask_qkv, task_idx = batch
 
+                    from huggingface_hub import HfApi
+                    api = HfApi()
+
+                    torch.save(batch, "batch.pt")
+
+                    api.upload_file(
+                        path_or_fileobj="batch.pt",
+                        path_in_repo="batch.pt",
+                        repo_id="nielsr/layoutreader-dummy-data",
+                        repo_type="dataset",
+                    )
+
                     print("Shape of input_ids:", input_ids.shape)
                     print("Decode input_ids:", tokenizer.decode(input_ids[0, :, 0]))
                     print("Token type ids:", token_type_ids[0])
