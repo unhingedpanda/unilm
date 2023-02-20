@@ -202,6 +202,12 @@ def main():
             else:
                 w_list.append(w)
         forbid_ignore_set = set(tokenizer.convert_tokens_to_ids(w_list))
+    print("Mask word id:", mask_word_id)
+    print("Eos id:", eos_word_ids)
+    print("Sos id:", sos_word_id)
+    print("Forbid ignore set:", forbid_ignore_set)
+    print("Ngram size:", args.ngram_size)
+    print("Pos shift:", args.pos_shift)
     print(args.model_path)
     found_checkpoint_flag = False
     for model_recover_path in [args.model_path.strip()]:
@@ -277,17 +283,17 @@ def main():
                         t.to(device) if t is not None else None for t in batch]
                     input_ids, token_type_ids, position_ids, input_mask, mask_qkv, task_idx = batch
 
-                    from huggingface_hub import HfApi
-                    api = HfApi()
+                    # from huggingface_hub import HfApi
+                    # api = HfApi()
 
-                    torch.save(batch, "batch.pt")
+                    # torch.save(batch, "batch.pt")
 
-                    api.upload_file(
-                        path_or_fileobj="batch.pt",
-                        path_in_repo="batch.pt",
-                        repo_id="nielsr/layoutreader-dummy-data",
-                        repo_type="dataset",
-                    )
+                    # api.upload_file(
+                    #     path_or_fileobj="batch.pt",
+                    #     path_in_repo="batch.pt",
+                    #     repo_id="nielsr/layoutreader-dummy-data",
+                    #     repo_type="dataset",
+                    # )
 
                     print("Shape of input_ids:", input_ids.shape)
                     print("Decode input_ids:", tokenizer.decode(input_ids[0, :, 0]))
