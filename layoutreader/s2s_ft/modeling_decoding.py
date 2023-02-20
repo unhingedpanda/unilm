@@ -1241,9 +1241,6 @@ class LayoutlmForSeq2SeqDecoder(PreTrainedBertModel):
                 print("--------------------")
                 print("Time step:", next_pos)
                 print("First values of prediction_scores:", prediction_scores[0,:3,:3])
-
-            if next_pos > 520:
-                break
             
             _, max_ids = torch.max(prediction_scores, dim=-1)
             output_ids.append(max_ids)
