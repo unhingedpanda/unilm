@@ -316,6 +316,7 @@ def main():
                     for i in range(len(buf)):
                         w_ids = output_ids[i]
                         output_buf = get_tokens_from_src_and_index(src=buf[i], index=w_ids, modifier=lambda x: x-1)
+                        print("Output_buf:", output_buf)
                         output_tokens = []
                         for t in output_buf:
                             if t in (tokenizer.sep_token, tokenizer.pad_token):
