@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-import torch
 from setuptools import find_packages, setup
-
-torch_ver = [int(x) for x in torch.__version__.split(".")[:2]]
-assert torch_ver >= [1, 4], "Requires PyTorch >= 1.4"
 
 setup(
     name="layoutlm",
@@ -19,6 +15,7 @@ setup(
         "lxml==4.9.1",          # Latest stable version
         "seqeval==1.2.1",        # Latest stable version
         "Pillow==9.5.0",        # Latest stable version
+        "torch>=1.13.1"         # Stable PyTorch version
     ],
     extras_require={
         "dev": ["flake8==4.0.1", "isort==5.14.0", "black==22.3.0", "pre-commit==2.25.1"]
