@@ -14,13 +14,13 @@ setup(
     packages=find_packages(exclude=("configs", "tests")),
     python_requires=">=3.6",
     install_requires=[
-        "transformers==2.9.0",
-        "tensorboardX==2.0",
-        "lxml==4.5.1",
-        "seqeval==0.0.12",
-        "Pillow==7.1.2",
+        "transformers==4.27.2",  # Latest stable version
+        "tensorboardX==2.5.1",   # Latest stable version
+        "lxml==4.9.1",          # Latest stable version
+        "seqeval==1.2.1",        # Latest stable version
+        "Pillow==9.5.0",        # Latest stable version
     ],
     extras_require={
-        "dev": ["flake8==3.8.2", "isort==4.3.21", "black==19.10b0", "pre-commit==2.4.0"]
+        "dev": ["flake8==4.0.1", "isort==5.14.0", "black==22.3.0", "pre-commit==2.25.1"]
     },
 )
